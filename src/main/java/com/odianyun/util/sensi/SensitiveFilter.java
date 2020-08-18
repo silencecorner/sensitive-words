@@ -48,14 +48,14 @@ public class SensitiveFilter implements Serializable {
     public SensitiveFilter(String fileZip, String strDestDir) {
         File destDir = new File(strDestDir);
         if (!destDir.getAbsoluteFile().getParentFile().canWrite() || !destDir.getAbsoluteFile().getParentFile().canRead()) {
-            throw new RuntimeException(String.format("dir [%s] need rw permission,please check it!",strDestDir));
+            throw new RuntimeException(String.format("dir [%s] need rw permission,please check it!", strDestDir));
         }
         try {
             if (destDir.exists()) {
                 if (destDir.delete()) {
                     destDir.mkdirs();
                 }
-            }else{
+            } else {
                 destDir.mkdirs();
             }
             unzip(fileZip, destDir);
@@ -65,9 +65,10 @@ public class SensitiveFilter implements Serializable {
             e.printStackTrace();
         }
     }
+
     private void read(File destDir) throws IOException {
         for (File file : destDir.listFiles()) {
-            if (file.isDirectory()){
+            if (file.isDirectory()) {
                 read(file);
                 continue;
             }
@@ -79,6 +80,7 @@ public class SensitiveFilter implements Serializable {
             reader.close();
         }
     }
+
     /**
      * 加载一个文件中的词典，并构建filter<br/>
      * 文件中，每行一个敏感词条<br/>
@@ -129,12 +131,12 @@ public class SensitiveFilter implements Serializable {
         ZipEntry zipEntry = zis.getNextEntry();
         while (zipEntry != null) {
             File newFile = newFile(destDir, zipEntry);
-            if (zipEntry.isDirectory()){
+            if (zipEntry.isDirectory()) {
                 newFile.mkdirs();
                 zipEntry = zis.getNextEntry();
                 continue;
             } else {
-               // continue;
+                // continue;
                 newFile.createNewFile();
             }
             FileOutputStream fos = new FileOutputStream(newFile);
@@ -327,11 +329,6 @@ public class SensitiveFilter implements Serializable {
         // 匹配的起始位置
         int i = 0;
         while (i < sp.length - 2) {
-            /*
-             * 移动到下一个匹配位置的步进：
-             * 如果未匹配为1，如果匹配是匹配的词长度
-             */
-            int step = 1;
             // 计算此位置开始2个字符的hash
             int hash = sp.nextTwoCharHash(i);
             /*
@@ -372,16 +369,15 @@ public class SensitiveFilter implements Serializable {
                                  * 如果节点只包含"色情电影"一个词，
                                  * 仍然能够取到word为"色情电影"，但是不该匹配。
                                  */
-                                return sp.nextStartsWith(i, word);
+                                if (sp.nextStartsWith(i, word)){
+                                    return true;
+                                }
                             }
                         }
 
                     }
                 }
             }
-
-            // 移动到下一个匹配位置
-            i += step;
         }
         return false;
     }
