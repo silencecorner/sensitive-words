@@ -1,6 +1,9 @@
 package com.odianyun.util.sensi;
 
+import sun.java2d.pipe.TextRenderer;
+
 import java.io.*;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.NavigableSet;
 import java.util.zip.ZipEntry;
@@ -89,7 +92,7 @@ public class SensitiveFilter implements Serializable {
     public SensitiveFilter(String file) {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    ClassLoader.getSystemResourceAsStream(file), StandardCharsets.UTF_8));
+                    getClass().getResourceAsStream(file), StandardCharsets.UTF_8));
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                 put(line);
             }
@@ -122,7 +125,7 @@ public class SensitiveFilter implements Serializable {
 
     private void unzip(String fileZip, File destDir) throws IOException {
         byte[] buffer = new byte[1024];
-        ZipInputStream zis = new ZipInputStream(ClassLoader.getSystemResourceAsStream(fileZip));
+        ZipInputStream zis = new ZipInputStream(getClass().getResourceAsStream(fileZip));
         ZipEntry zipEntry = zis.getNextEntry();
         while (zipEntry != null) {
             File newFile = newFile(destDir, zipEntry);
@@ -151,7 +154,6 @@ public class SensitiveFilter implements Serializable {
 
         String destDirPath = destinationDir.getCanonicalPath();
         String destFilePath = destFile.getCanonicalPath();
-
         if (!destFilePath.startsWith(destDirPath + File.separator)) {
             throw new IOException("Entry is outside of the target dir: " + zipEntry.getName());
         }

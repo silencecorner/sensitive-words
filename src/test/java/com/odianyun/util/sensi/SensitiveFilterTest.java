@@ -17,7 +17,7 @@ public class SensitiveFilterTest extends TestCase{
 	public void test() throws Exception{
 		
 		// 使用默认单例（加载默认词典）
-		SensitiveFilter filter = new SensitiveFilter("sensi_words.zip","sensi_words");
+		SensitiveFilter filter = new SensitiveFilter("/sensi_words.zip","sensi_words");
 		// 待过滤的句子
 		String sentence = "然后，市长在婚礼上唱春天在哪里。";
 		// 进行过滤
@@ -71,7 +71,7 @@ public class SensitiveFilterTest extends TestCase{
 		System.out.println(String.format("待过滤文本共 %d 行，%d 字符。", testSuit.size(), length));
 		
 		
-		SensitiveFilter filter = new SensitiveFilter("sensi_words.txt");
+		SensitiveFilter filter = new SensitiveFilter("/sensi_words.txt");
 		
 		int replaced = 0;
 		
