@@ -28,6 +28,7 @@ public class SensitiveFilterTest extends TestCase{
 			// 句子中有敏感词
 			System.out.println(filted);
 		}
+		System.out.println(filter.check(sentence));
 
 	}
 	
