@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.util.zip.ZipInputStream;
 
 import junit.framework.TestCase;
 
@@ -15,21 +17,18 @@ public class SensitiveFilterTest extends TestCase{
 	public void test() throws Exception{
 		
 		// 使用默认单例（加载默认词典）
-		SensitiveFilter filter = SensitiveFilter.DEFAULT;
-		// 向过滤器增加一个词
-		filter.put("婚礼上唱春天在哪里");
-		
+		SensitiveFilter filter = new SensitiveFilter("sensi_words.zip","sensi_words");
 		// 待过滤的句子
 		String sentence = "然后，市长在婚礼上唱春天在哪里。";
 		// 进行过滤
 		String filted = filter.filter(sentence, '*');
-		
+
 		// 如果未过滤，则返回输入的String引用
 		if(sentence != filted){
 			// 句子中有敏感词
 			System.out.println(filted);
 		}
-		
+
 	}
 	
 	public void testLogic(){
@@ -71,7 +70,7 @@ public class SensitiveFilterTest extends TestCase{
 		System.out.println(String.format("待过滤文本共 %d 行，%d 字符。", testSuit.size(), length));
 		
 		
-		SensitiveFilter filter = SensitiveFilter.DEFAULT;
+		SensitiveFilter filter = new SensitiveFilter("sensi_words.txt");
 		
 		int replaced = 0;
 		

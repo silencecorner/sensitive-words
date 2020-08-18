@@ -1,0 +1,6 @@
+*.iml
+target
+.idea
+build
+production
+sensi_words
