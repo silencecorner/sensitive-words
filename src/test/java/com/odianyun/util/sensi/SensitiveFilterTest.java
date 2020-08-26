@@ -19,7 +19,7 @@ public class SensitiveFilterTest extends TestCase{
 		// 使用默认单例（加载默认词典）
 		SensitiveFilter filter = new SensitiveFilter("/sensi_words.zip","sensi_words");
 		// 待过滤的句子
-		String sentence = "法轮，市长在婚礼上唱春天在哪里。";
+		String sentence = "屄";
 		// 进行过滤
 		String filted = filter.filter(sentence, '*');
 

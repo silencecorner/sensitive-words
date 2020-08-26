@@ -5,7 +5,9 @@ import sun.java2d.pipe.TextRenderer;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
 import java.util.NavigableSet;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -34,6 +36,8 @@ public class SensitiveFilter implements Serializable {
      * 使用2个字符的hash定位。
      */
     protected SensitiveNode[] nodes = new SensitiveNode[DEFAULT_INITIAL_CAPACITY];
+
+    private Set<String>  singleSet = new HashSet<>();
 
     /**
      * 构建一个空的filter
@@ -171,10 +175,13 @@ public class SensitiveFilter implements Serializable {
      * @date 2017年1月5日 下午2:35:21
      */
     public boolean put(String word) {
-        // 长度小于2的不加入
-        if (word == null || word.trim().length() < 2) {
+        if (word == null || word.trim().length() < 1) {
             return false;
         }
+        if (word.trim().length()  == 1){
+            return singleSet.add(word.trim());
+        }
+
         // 两个字符的不考虑
         if (word.length() == 2 && word.matches("\\w\\w")) {
             return false;
@@ -230,6 +237,11 @@ public class SensitiveFilter implements Serializable {
      * @date 2017年1月5日 下午4:16:31
      */
     public String filter(String sentence, char replace) {
+        if (sentence == null){
+            return null;
+        }else if (sentence.trim().length() == 1 && singleSet.contains(sentence.trim())){
+            return String.valueOf(replace);
+        }
         // 先转换为StringPointer
         StringPointer sp = new StringPointer(sentence);
 
@@ -323,6 +335,11 @@ public class SensitiveFilter implements Serializable {
      * @return 是否有敏感词
      */
     public boolean check(String sentence) {
+        if (sentence == null){
+            return false;
+        }else if (sentence.trim().length() == 1){
+            return singleSet.contains(sentence.trim());
+        }
         // 先转换为StringPointer
         StringPointer sp = new StringPointer(sentence);
 
